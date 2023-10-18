@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.SourceFile;
 import org.openrewrite.marker.Marker;
+import org.openrewrite.maven.MavenExecutionContextView;
+import org.openrewrite.maven.MavenSettings;
 import org.openrewrite.style.NamedStyles;
 import org.openrewrite.tree.ParsingEventListener;
 import org.openrewrite.tree.ParsingExecutionContextView;
@@ -99,6 +101,8 @@ public class RewriteProjectParser {
 
         eventPublisher.publishEvent(new StartedParsingProjectEvent(resources));
 
+        MavenSettings mavenSettings = MavenSettings.parse(Path.of(System.getProperty("user.home")).resolve(".m2/settings.xml"), executionContext);
+        MavenExecutionContextView.view(executionContext).setMavenSettings(mavenSettings);
         ParsingExecutionContextView.view(executionContext).setParsingListener(parsingEventListener);
 
         // TODO: "runPerSubmodule"
